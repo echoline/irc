@@ -9,11 +9,16 @@ function begin() {
 	}
 }
 
+var s = "";
+
 function load() {
 	try {
-		var s = document.IRCSocket.read();
+		var chunk = document.IRCSocket.read();
 
-		if (s != null) {
+		if (chunk != null)
+			s += chunk;
+
+		if ((s != "")  && (s.charAt(s.length-1) == '\n')) {
 			if (ping = s.match(/PING\s+\S+\s+/)) {
 				ping = ping[0].replace("PING", "PONG");
 				document.IRCSocket.write(ping);
@@ -22,6 +27,8 @@ function load() {
 				document.getElementById('main').innerHTML += s;
 				window.scrollTo(0,document.body.scrollHeight);
 			}
+
+			s = "";
 		}
 
 		setTimeout('load()', 10);
@@ -39,7 +46,7 @@ function send(event) {
 
 		window.scrollTo(0,document.body.scrollHeight);
 
-		privmsg = l.match(/privmsg[^:]+/);
+		privmsg = l.match(/privmsg[^:]+/i);
 		if (privmsg != null)
 			document.getElementById('input').value = privmsg[0] + ":";
 		else
