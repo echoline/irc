@@ -24,6 +24,7 @@ function load() {
 				document.IRCSocket.write(ping);
 
 			} else {
+				s = s.replace("&", "&amp").replace("<", "&lt;").replace(">", "&gt;");
 				document.getElementById('main').innerHTML += s;
 				window.scrollTo(0,document.body.scrollHeight);
 			}
@@ -41,8 +42,9 @@ function load() {
 function send(event) {
 	if (event.keyCode == 13) {
 		var l = document.getElementById('input').value + "\n";
-		document.getElementById('main').innerHTML += l;
 		document.IRCSocket.write(l);
+		l = l.replace("&", "&amp").replace("<", "&lt;").replace(">", "&gt;");
+		document.getElementById('main').innerHTML += l;
 
 		window.scrollTo(0,document.body.scrollHeight);
 
