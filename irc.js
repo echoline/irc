@@ -24,7 +24,7 @@ function load() {
 				document.IRCSocket.write(ping);
 
 			} else {
-				s = s.replace("&", "&amp").replace("<", "&lt;").replace(">", "&gt;");
+				s = s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
 				document.getElementById('main').innerHTML += s;
 				window.scrollTo(0,document.body.scrollHeight);
 			}
@@ -43,7 +43,7 @@ function send(event) {
 	if (event.keyCode == 13) {
 		var l = document.getElementById('input').value + "\n";
 		document.IRCSocket.write(l);
-		l = l.replace("&", "&amp").replace("<", "&lt;").replace(">", "&gt;");
+		l = l.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
 		document.getElementById('main').innerHTML += l;
 
 		window.scrollTo(0,document.body.scrollHeight);
