@@ -27,7 +27,7 @@ public class IRCSocket extends java.applet.Applet {
 	SSLSocket s = null;
 	SSLReader reader = null;
 
-	public IRCSocket() throws Exception {
+	public void init() {
 		TrustManager[] certs = new TrustManager[]{
 		new X509TrustManager() {
 			public X509Certificate[] getAcceptedIssuers() {
@@ -60,16 +60,18 @@ public class IRCSocket extends java.applet.Applet {
 		}
 		};
 
-		SSLContext sc = SSLContext.getInstance("SSL");
-		sc.init(null, certs, new java.security.SecureRandom());
-		//String srv = getParameter("server");
-		//int port = Integer.parseInt(getParameter("port"));
-		//s = (SSLSocket)sc.getSocketFactory().createSocket(srv, port);
-		s = (SSLSocket)sc.getSocketFactory().createSocket("echoline.org", 6697);
+		try {
+			SSLContext sc = SSLContext.getInstance("SSL");
+			sc.init(null, certs, new java.security.SecureRandom());
+			String srv = getParameter("server");
+			int port = Integer.parseInt(getParameter("port"));
+			s = (SSLSocket)sc.getSocketFactory().createSocket(srv, port);
 
-		reader = new SSLReader(s);
-		Thread rthread = new Thread(reader);
-		rthread.start();
+			reader = new SSLReader(s);
+			Thread rthread = new Thread(reader);
+			rthread.start();
+		} catch(Exception e) {
+		}
 	}
 
 	public void write(String out) throws Exception {
