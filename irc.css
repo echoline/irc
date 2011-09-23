@@ -1,0 +1,36 @@
+.tabs {
+	position:fixed;
+	top:0;
+	left:0;
+	width: 100%;
+}
+
+#inbox {
+	width: 80%;
+	margin-left: 1em;
+	border: 1px solid #4297d7;
+	background: #2191c0 url(images/ui-bg_gloss-wave_75_2191c0_500x100.png) 50% 50% repeat-x;
+	color: #eaf5f7;
+	bottom: 0.75em;
+	position: fixed;
+}
+
+#content {
+	margin-left: 2em;
+	width: 75%;
+}
+
+.userlist {
+	margin: 0.5em;
+	padding: 0.5em;
+	list-style-type: none;
+	position: fixed;
+	right: 7px;
+	top: 2.5em;
+}
+
+.userlist li a:hover {
+	border:none;
+	background:none;
+}
+
