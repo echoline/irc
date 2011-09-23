@@ -1,6 +1,7 @@
 import javax.net.ssl.*;
 import java.security.cert.*;
 import java.io.InputStream;
+import java.util.Vector;
 
 public class IRCSocket extends java.applet.Applet {
 	SSLSocket s = null;
@@ -58,7 +59,7 @@ public class IRCSocket extends java.applet.Applet {
 
 	private class SSLReader implements Runnable {
 		SSLSocket s;
-		Vector<byte> r = new Vector();
+		Vector<Byte> r = new Vector<Byte>();
 
 		public SSLReader(SSLSocket sin) {
 			s = sin;
@@ -73,7 +74,13 @@ public class IRCSocket extends java.applet.Applet {
 						r.add((byte)i);
 					}
 			} catch (Exception e) {
-				r.add(e.toString().getBytes("UTF-8"));
+				try {
+					byte u[] = e.toString().getBytes("UTF-8");
+
+					for (i = 0; i < u.length; i++)
+						r.add(u[i]);
+				} catch (Exception screwed) {
+				}
 			}
 		}
 
@@ -81,7 +88,17 @@ public class IRCSocket extends java.applet.Applet {
 			String ret = null;
 			synchronized(r) {
 				if (r.size() != 0) {
-					ret = new String(r.toArray(), 0, r.size(), "UTF-8");
+					byte u[] = new byte[r.size()];
+
+					for (int i = 0; i < r.size(); i++)
+						u[i] = r.get(i).byteValue();
+
+					try {
+						ret = new String(u, 0, r.size(), "UTF-8");
+					} catch (Exception e) {
+						ret = e.toString();
+					}
+
 					r.clear();
 				}
 			}
