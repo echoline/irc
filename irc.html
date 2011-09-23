@@ -10,13 +10,12 @@
 		<link href="jquery-ui-1.8.16.custom.css" type="text/css" rel="stylesheet"></link>
 	</head>
 	<body onload="gui()" style="font-size:75%">
-		<applet archive="IRCSocket.jar"
-				code="IRCSocket.class"
-				width="0" height="0"
-				alt="Please enable Java in your browser"
-				name="IRCSocket" id="IRCSocket" MAYSCRIPT>
-			<param name=server value="echoline.org">
-			<param name=port value="6697">
+		<applet code="IRCSocket.class" archive="IRCSocket.jar"
+			width="0" height="0"
+			name="IRCSocket" id="IRCSocket" MAYSCRIPT>
+				<param name="server" value="echoline.org">
+				<param name="port" value="6697">
+			This page will be very boring if your browser doesn't understand Java.
 		</applet>
 		<div id="content" class="ui-tabs">
 			<ul class="tabs">
