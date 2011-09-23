@@ -3,12 +3,17 @@
 <html>
 	<head>
 		<title>irc</title>
+		<!--	you must somehow include these three files.
+			see jquery.com
+		-->
 		<script language="javascript" src="jquery-1.6.2.min.js"></script>
 		<script language="javascript" src="jquery-ui-1.8.16.custom.min.js"></script>
-		<script language="javascript" src="ui.tabs.closable.js"></script>
-		<script language="javascript" src="irc.js"></script>
 		<link href="jquery-ui-1.8.16.custom.css" type="text/css" rel="stylesheet"></link>
 		<link href="irc.css" type="text/css" rel="stylesheet"></link>
+
+		<!--	i gave you these two for free -->
+		<script language="javascript" src="ui.tabs.closable.js"></script>
+		<script language="javascript" src="irc.js"></script>
 	</head>
 	<body onload="gui()" style="font-size:75%">
 		<applet code="IRCSocket.class" archive="IRCSocket.jar"

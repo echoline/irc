@@ -76,7 +76,7 @@ function load() {
 							else
 								t = from;
 
-							var m = s.substr(s.substr(1).indexOf(':') + 2).replace(/http:\/\/(\S+)/g, "<a href=\"http://$1\">http://$1</a>");
+							var m = s.substr(s.substr(1).indexOf(':') + 2).replace(/(https?):\/\/(\S+)/g, "<a href=\"$1://$2\">$1://$2</a>");
 							var id;
 						
 							if (t.charAt(0).match(/^#$/)) {
@@ -175,6 +175,18 @@ function load() {
 							$(chan).append((new Date()).toLocaleTimeString() + " " + who + " has left " + chan + '<br/>');
 							window.scrollTo(0,document.body.scrollHeight);
 						
+						} else if (list[1].match(/kick/i)) {
+							var who = list[0].substr(1,list[0].indexOf('!')-1);
+							var chan = list[2];
+
+							$(chan + ' .userlist li').remove(":contains('" + list[3] + "')");
+							if (list[3].match(nick))
+								$(chan).append('<span style="color:#F00;">' + (new Date()).toLocaleTimeString() + ' you have been kicked from ' + chan + '</span><br/>');
+							else
+								$(chan).append((new Date()).toLocaleTimeString() + " " + who + " has kicked " + list[3] + ': ' + s.substr(s.substr(1).indexOf(':') + 2) + '<br/>');
+
+							window.scrollTo(0,document.body.scrollHeight);
+						
 						} else if (list[1].match(/quit/i)) {
 							var who = list[0].substr(1,list[0].indexOf('!')-1);
 							var msg = s.substr(s.substr(1).indexOf(':') + 2);
@@ -193,7 +205,7 @@ function load() {
 							window.scrollTo(0,document.body.scrollHeight);
 						}
 
-					} else if (!s.match(/^$/) && !s.match(/^\s+$/)) {
+					} else if (!s.match(/^\s*$/)) {
 						$('#status').append(s + '<br/>');
 						window.scrollTo(0,document.body.scrollHeight);
 					}
@@ -219,7 +231,7 @@ function send(event) {
 				if (l.substr(1).match(/^me\ /i) && target) {
 					var tab = tablist[target];
 					document.getElementById('IRCSocket').write('privmsg ' + tab.text + ' :'  + l.replace(/^\/me\ (.*)$/i, "\001ACTION $1\001") + '\n');
-					l = l.replace(/^\/me\ /i,"").replace(/\&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/http:\/\/(\S+)/g, "<a href=\"http://$1\">http://$1</a>");
+					l = l.replace(/^\/me\ /i,"").replace(/\&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/(https?):\/\/(\S+)/g, "<a href=\"$1://$2\">$1://$2</a>");
 					var panel = panellist[target];
 					$(panel).append((new Date()).toLocaleTimeString() + " * <span style=\"color:#F00\">" + nick + "</span> " + l + '<br/>');
 
@@ -229,7 +241,7 @@ function send(event) {
 			} else if (target) {
 				var tab = tablist[target];
 				document.getElementById('IRCSocket').write('privmsg ' + tab.text + ' :'  + l + '\n');
-				l = l.replace(/\&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/http:\/\/(\S+)/g, "<a href=\"http://$1\">http://$1</a>");
+				l = l.replace(/\&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/(https?):\/\/(\S+)/g, "<a href=\"$1://$2\">$1://$2</a>");
 				var panel = panellist[target];
 				$(panel).append((new Date()).toLocaleTimeString() + " &lt;<span style=\"color:#F00\">" + nick + "</span>&gt; " + l + '<br/>');
 			}
