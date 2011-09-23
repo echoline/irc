@@ -42,7 +42,10 @@ public class IRCSocket extends java.applet.Applet {
 
 		SSLContext sc = SSLContext.getInstance("SSL");
 		sc.init(null, certs, new java.security.SecureRandom());
-		s = (SSLSocket)sc.getSocketFactory().createSocket("echoline.org", 6697);
+		s = (SSLSocket)sc.getSocketFactory().createSocket(
+			getParameter("server"),
+			Integer.parseInt(getParameter("port"))
+		);
 
 		reader = new SSLReader(s);
 		Thread rthread = new Thread(reader);
