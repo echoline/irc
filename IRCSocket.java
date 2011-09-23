@@ -53,18 +53,12 @@ public class IRCSocket extends java.applet.Applet {
 	}
 
 	public String read() throws Exception {
-		int i;
-		String r = reader.read();
-
-		if (r.length() == 0)
-			return null;
-
-		return r;
+		return reader.read();
 	}
 
 	private class SSLReader implements Runnable {
 		SSLSocket s;
-		String r = "";
+		Vector<byte> r = new Vector();
 
 		public SSLReader(SSLSocket sin) {
 			s = sin;
@@ -76,18 +70,20 @@ public class IRCSocket extends java.applet.Applet {
 			try {
 				while ((i = s.getInputStream().read()) != -1)
 					synchronized(r) {
-						r = (new StringBuffer(r)).append((char)i).toString();
+						r.add((byte)i);
 					}
 			} catch (Exception e) {
-				r = e.toString();
+				r.add(e.toString().getBytes("UTF-8"));
 			}
 		}
 
 		public String read() {
-			String ret = "";
+			String ret = null;
 			synchronized(r) {
-				ret = r;
-				r = "";
+				if (r.size() != 0) {
+					ret = new String(r.toArray(), 0, r.size(), "UTF-8");
+					r.clear();
+				}
 			}
 			return ret;
 		}
