@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>irc</title>
+		<script language="javascript" src="jquery-1.6.2.min.js"></script>
+		<script language="javascript" src="jquery-ui-1.8.16.custom.min.js"></script>
+		<script language="javascript" src="ui.tabs.closable.js"></script>
+		<script language="javascript" src="irc.js"></script>
+		<link href="jquery-ui-1.8.16.custom.css" type="text/css" rel="stylesheet"></link>
+	</head>
+	<body onload="gui()" style="font-size:75%">
+		<applet archive="IRCSocket.jar"
+			code="IRCSocket.class"
+			width="0" height="0"
+			alt="Please enable Java in your browser"
+			name="IRCSocket" id="IRCSocket" MAYSCRIPT>
+		</applet>
+		<div id="content" class="ui-tabs">
+			<ul class="tabs">
+				<li class="statusli"><a href="#status"><span>status</span></a></li>
+			</ul>
+			<div id="status">
+			</div>
+		</div>
+		<div id="input">
+		<form>
+			<input type="text" id="inbox" onKeyPress="return send(event)"/>
+		</form>
+		</div>
+	</body>
+</html>
