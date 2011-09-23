@@ -1,3 +1,23 @@
+/**
+SSLSocket IRC applet for use with javascript.
+Copyright (C) 2011 Eli Cohen
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+Contact me using this program at http://echoline.org/irc
+*/
+
 import javax.net.ssl.*;
 import java.security.cert.*;
 import java.io.InputStream;
@@ -7,7 +27,7 @@ public class IRCSocket extends java.applet.Applet {
 	SSLSocket s = null;
 	SSLReader reader = null;
 
-	public IRCSocket() throws Exception {
+	public void init() {
 		TrustManager[] certs = new TrustManager[]{
 		new X509TrustManager() {
 			public X509Certificate[] getAcceptedIssuers() {
@@ -40,16 +60,18 @@ public class IRCSocket extends java.applet.Applet {
 		}
 		};
 
-		SSLContext sc = SSLContext.getInstance("SSL");
-		sc.init(null, certs, new java.security.SecureRandom());
-		String srv = getParameter("server");
-		int port = Integer.parseInt(getParameter("port"));
-		s = (SSLSocket)sc.getSocketFactory().createSocket(srv, port);
-		//s = (SSLSocket)sc.getSocketFactory().createSocket("echoline.org", 6697);
+		try {
+			SSLContext sc = SSLContext.getInstance("SSL");
+			sc.init(null, certs, new java.security.SecureRandom());
+			String srv = getParameter("server");
+			int port = Integer.parseInt(getParameter("port"));
+			s = (SSLSocket)sc.getSocketFactory().createSocket(srv, port);
 
-		reader = new SSLReader(s);
-		Thread rthread = new Thread(reader);
-		rthread.start();
+			reader = new SSLReader(s);
+			Thread rthread = new Thread(reader);
+			rthread.start();
+		} catch(Exception e) {
+		}
 	}
 
 	public void write(String out) throws Exception {
