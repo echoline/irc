@@ -1,4 +1,4 @@
-.tabs {
+#tabs {
 	position:fixed;
 	top:0;
 	left:0;
@@ -12,12 +12,14 @@
 	background: #2191c0 url(images/ui-bg_gloss-wave_75_2191c0_500x100.png) 50% 50% repeat-x;
 	color: #eaf5f7;
 	bottom: 0.75em;
+	left: 1em;
 	position: fixed;
 }
 
 #content {
-	margin-left: 2em;
 	width: 75%;
+	margin-left: 2em;
+	margin-bottom: 2em;
 }
 
 .userlist {
@@ -29,7 +31,12 @@
 	top: 2.5em;
 }
 
+.userlist li a {
+	text-decoration: none;
+}
+
 .userlist li a:hover {
+	color: blue;
 	border:none;
 	background:none;
 }
