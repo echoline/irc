@@ -1,5 +1,5 @@
 /**
-SSLSocket IRC applet for use with javascript.
+SSLSocket applet for use with javascript.
 Copyright (C) 2011 Eli Cohen
 
 This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@ import java.security.cert.*;
 import java.io.InputStream;
 import java.util.Vector;
 
-public class IRCSocket extends java.applet.Applet {
+public class SSLApplet extends java.applet.Applet {
 	SSLSocket s = null;
 	SSLReader reader = null;
 
