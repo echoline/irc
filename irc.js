@@ -205,7 +205,7 @@ function load() {
 							else
 								t = from;
 
-							var m = s.substr(s.substr(1).indexOf(':') + 2).replace(/(https?):\/\/(\S+)/g, "<a href=\"$1://$2\">$1://$2</a>");
+							var m = s.substr(s.substr(1).indexOf(':') + 2).replace(/(https?):\/\/(\S+)/g, "<a href=\"$1://$2\" target=\"_blank\">$1://$2</a>");
 							var id = String.fromCharCode(35).concat(valid(t));
 
 							// privmsg ctcps
@@ -377,11 +377,20 @@ function send(event) {
 			var l = document.getElementById('inbox').value;
 			l = l.replace(/\\u(\d|[A-F]){4}/gi, function(arg) { return String.fromCharCode(parseInt(arg.substr(2), 16)); });
 			if (l.charAt(0) == '/') {
-				if (l.substr(1).match(/^me\ /i) && target) {
+				if (a = l.match(/^\/msg\s+([^\s]+)\s+(.*)/i)) {
+					var to = a[1];
+					var mesg = a[2];
+
+					msg(to);
+
+					document.getElementById('IRCSocket').write('privmsg ' + to + ' :'  + mesg + '\n');
+
+					$(String.fromCharCode(35).concat(valid(to))).append((new Date()).toLocaleTimeString() + " &lt;<span style=\"color:#F00\">" + nick + "</span>&gt; " + irc2html(mesg) + '<br/>');
+				} else if (l.match(/^\/me\s/i) && target) {
 					var tab = tablist[target];
 
-					document.getElementById('IRCSocket').write('privmsg ' + tab.text + ' :'  + l.replace(/^\/me\ (.*)$/i, "\001ACTION $1\001") + '\n');
-					l = l.replace(/^\/me\ /i,"").replace(/\&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/(https?):\/\/(\S+)/g, "<a href=\"$1://$2\">$1://$2</a>")
+					document.getElementById('IRCSocket').write('privmsg ' + tab.text + ' :'  + l.replace(/^\/me\s(.*)$/i, "\001ACTION $1\001") + '\n');
+					l = l.replace(/^\/me\s/i,"").replace(/\&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/(https?):\/\/(\S+)/g, "<a href=\"$1://$2\" target=\"_blank\">$1://$2</a>")
 					var panel = panellist[target];
 					$(panel).append((new Date()).toLocaleTimeString() + " * <span style=\"color:#F00\">" + nick + "</span> " + irc2html(l) + '<br/>');
 
@@ -391,7 +400,7 @@ function send(event) {
 			} else if (target) {
 				var tab = tablist[target];
 				document.getElementById('IRCSocket').write('privmsg ' + tab.text + ' :'  + l + '\n');
-				l = l.replace(/\&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/(https?):\/\/(\S+)/g, "<a href=\"$1://$2\">$1://$2</a>").replace(/\\u([\d|A-F]{4})/gi, function(arg){return "" + String.fromCharCode(parseInt(arg, 16));});
+				l = l.replace(/\&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/(https?):\/\/(\S+)/g, "<a href=\"$1://$2\" target=\"_blank\">$1://$2</a>").replace(/\\u([\d|A-F]{4})/gi, function(arg){return "" + String.fromCharCode(parseInt(arg, 16));});
 				var panel = panellist[target];
 				$(panel).append((new Date()).toLocaleTimeString() + " &lt;<span style=\"color:#F00\">" + nick + "</span>&gt; " + irc2html(l) + '<br/>');
 			}
@@ -405,6 +414,26 @@ function send(event) {
 		}
 
 		document.getElementById('inbox').value = '';
+		return false;
+	} else if (event.keyCode == 9) {
+		var s = document.getElementById('inbox').value;
+
+		if (s = s.match(/([^\s]+)$/)) {
+			s = s[1];
+
+			$(".userlist li:contains(" + s + ")").each(function() {
+				if ($(this).text().match(new RegExp("^" + s))) {
+					document.getElementById('inbox').value += $(this).text().substr(s.length);
+
+					return false;
+				}
+			});
+		}
+		
+		if (event.preventDefault) {
+			event.preventDefault();
+		}
+
 		return false;
 	}
 }
