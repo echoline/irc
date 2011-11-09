@@ -18,6 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Contact me using this program at http://echoline.org/irc
 */
 
+window.onload = gui;
+window.onunload = function() {
+	document.getElementById('IRCSocket').write('quit :window closed\n');
+};
+
 var nick;
 
 function begin() {
@@ -196,7 +201,7 @@ function load() {
 
 					if ((list = s.split(/\s+/)) && (list.length > 1)) {
 						if (list[1].match(/^privmsg$/i) || list[1].match(/^notice$/i)) {
-							var from = list[0].substr(1,list[0].indexOf('!')-1);
+							var from = s.substr(1,s.indexOf('!')-1);
 							var to = list[2];
 							var t;
 
@@ -244,9 +249,6 @@ function load() {
 								$('#status').append(s + '<br/>');
 							}
 
-							if (MathJax)
-								MathJax.Hub.Queue(["Typeset",MathJax.Hub, "content"]);
-
 							window.scrollTo(0,document.body.scrollHeight);
 						} else if (list[1].match(/^353$/)) {
 							var t = list[4];
@@ -278,7 +280,7 @@ function load() {
 							window.scrollTo(0,document.body.scrollHeight);
 
 						} else if (list[1].match(/nick/i)) {
-							var from = list[0].substr(1,list[0].indexOf('!')-1);
+							var from = s.substr(1,s.indexOf('!')-1);
 							var to = list[2].substr(1);
 
 							$('.userlist li a').each(function(i) {
@@ -297,7 +299,7 @@ function load() {
 								nick = to;
 
 						} else if (list[1].match(/join/i)) {
-							var who = list[0].substr(1,list[0].indexOf('!')-1);
+							var who = s.substr(1,s.indexOf('!')-1);
 							var chan = list[2].substr(1);
 							var id = String.fromCharCode(35).concat(valid(chan));
 
@@ -306,7 +308,7 @@ function load() {
 							window.scrollTo(0,document.body.scrollHeight);
 
 						} else if (list[1].match(/part/i)) {
-							var who = list[0].substr(1,list[0].indexOf('!')-1);
+							var who = s.substr(1,s.indexOf('!')-1);
 							var chan = list[2].substr(1);
 							var id = String.fromCharCode(35).concat(valid(chan));
 
@@ -315,7 +317,7 @@ function load() {
 							window.scrollTo(0,document.body.scrollHeight);
 						
 						} else if (list[1].match(/kick/i)) {
-							var who = list[0].substr(1,list[0].indexOf('!')-1);
+							var who = s.substr(1,s.indexOf('!')-1);
 							var chan = list[2];
 							var id = String.fromCharCode(35).concat(valid(chan));
 
@@ -328,7 +330,7 @@ function load() {
 							window.scrollTo(0,document.body.scrollHeight);
 						
 						} else if (list[1].match(/quit/i)) {
-							var who = list[0].substr(1,list[0].indexOf('!')-1);
+							var who = s.substr(1,s.indexOf('!')-1);
 							var msg = s.substr(s.substr(1).indexOf(':') + 2);
 
 							$('.userlist:has(li)').each(function() {
@@ -343,7 +345,7 @@ function load() {
 
 							window.scrollTo(0,document.body.scrollHeight);
 
-						} else if (list[0].match(/^error/i)) {
+						} else if (s.match(/^error/i)) {
 							$('#content').tabs("select", "status");
 							$('#status').append("<span style=\"color:#F00\">" + s + '</span><br/>');
 							window.scrollTo(0,document.body.scrollHeight);
@@ -405,9 +407,6 @@ function send(event) {
 				$(panel).append((new Date()).toLocaleTimeString() + " &lt;<span style=\"color:#F00\">" + nick + "</span>&gt; " + irc2html(l) + '<br/>');
 			}
 
-			if (MathJax)
-				MathJax.Hub.Queue(["Typeset",MathJax.Hub, "content"]);
-
 			window.scrollTo(0,document.body.scrollHeight);
 		} catch (e) {
 			document.getElementById('status').innerHTML += e;
@@ -421,9 +420,9 @@ function send(event) {
 		if (s = s.match(/([^\s]+)$/)) {
 			s = s[1];
 
-			$(".userlist li:contains(" + s + ")").each(function() {
-				if ($(this).text().match(new RegExp("^" + s))) {
-					document.getElementById('inbox').value += $(this).text().substr(s.length);
+			$(".userlist li").each(function() {
+				if ($(this).text().match(new RegExp("^" + s, "i"))) {
+					document.getElementById('inbox').value = document.getElementById('inbox').value.replace(new RegExp(s + "$"), $(this).text());
 
 					return false;
 				}

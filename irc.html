@@ -6,30 +6,17 @@
 		<!--	you must somehow include these three files.
 			see jquery.com
 		-->
-		<script language="javascript" src="jquery-1.6.2.min.js"></script>
-		<script language="javascript" src="jquery-ui-1.8.16.custom.min.js"></script>
-		<link href="jquery-ui-1.8.16.custom.css" type="text/css" rel="stylesheet"></link>
+		<script language="javascript" src="/jquery-1.6.2.min.js"></script>
+		<script language="javascript" src="/jquery-ui-1.8.16.custom.min.js"></script>
+		<link href="/jquery-ui-1.8.16.custom.css" type="text/css" rel="stylesheet"></link>
 
 		<!--	i gave you these three for free -->
-		<script language="javascript" src="ui.tabs.closable.js"></script>
-		<script language="javascript" src="irc.js"></script>
-		<link href="irc.css" type="text/css" rel="stylesheet"></link>
-
-		<!-- for embedded math -->
-		<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+		<link href="/irc.css" type="text/css" rel="stylesheet"></link>
+		<script language="javascript" src="/ui.tabs.closable.js"></script>
+		<script language="javascript" src="/irc.js"></script>
 	</head>
-	<body onload="gui()" style="font-size:75%">
-		<applet code="SSLApplet.class" archive="SSLApplet.jar"
-			width="0" height="0"
-			name="IRCSocket" id="IRCSocket" MAYSCRIPT>
-				<!--	change these to the same server this
-					html is on or the applet will have a
-					permission dysfunctionality disorder
-				 -->
-				<param name="server" value="echoline.org"/>
-				<param name="port" value="6697"/>
-			This page will be very boring if your browser doesn't understand Java.
-		</applet>
+	<body style="font-size:75%">
+		<applet code="SSLApplet.class" archive="SSLApplet.jar" width="0" height="0" id="IRCSocket" mayscript="mayscript"> <param name="server" value="echoline.org"/> <param name="port" value="6697"/> This page will be very boring without Java.  </applet>
 		<div id="content" class="ui-tabs" style="margin-bottom:1.25em;">
 			<ul id="tabs">
 				<li class="statusli"><a href="#status"><span>status</span></a></li>
