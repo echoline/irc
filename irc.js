@@ -366,7 +366,7 @@ function load() {
 
 		setTimeout('load()', 100);
 	} catch(e) {
-		document.getElementById('status').innerHTML += e;
+		document.getElementById('status').innerHTML += e + '<br/>' + e.getCause();
 		window.scrollTo(0,document.body.scrollHeight);
 	}
 }

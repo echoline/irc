@@ -114,9 +114,11 @@ public class SSLApplet extends java.applet.Applet {
 			synchronized(r) {
 				if (r.size() != 0) {
 					byte u[] = new byte[r.size()];
+					int i;
 
-					for (int i = 0; i < r.size(); i++)
+					for (i = 0; i < r.size(); i++) {
 						u[i] = r.get(i).byteValue();
+					}
 
 					try {
 						ret = new String(u, 0, r.size(), "UTF-8");
