@@ -18,9 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Contact me using this program at http://echoline.org/irc
 */
 
+window.ajax = false;
 window.onload = gui;
 window.onunload = function() {
-	document.getElementById('IRCSocket').write('quit :window closed\n');
+	if (window.ajax == false)
+		document.getElementById('IRCSocket').write('quit :window closed\n');
 };
 
 var nick;
@@ -29,7 +31,8 @@ function begin() {
 	try {
 		nick = "guest" + Math.floor(Math.random() * 1000);
 		var cmds = "user " + nick + " \"\" " + nick + " :" + nick + "\nnick " + nick + "\n";
-		document.getElementById('IRCSocket').write(cmds);
+		if (window.ajax == false)
+			document.getElementById('IRCSocket').write(cmds);
 		load();
 	} catch(e) {
 		document.getElementById('status').innerHTML += e;
@@ -183,7 +186,10 @@ function exists(t) {
 
 function load() {
 	try {
-		var chunk = document.getElementById('IRCSocket').read();
+		var chunk;
+
+		if (window.ajax == false)
+			chunk = document.getElementById('IRCSocket').read();
 
 		if (chunk != null)
 			s += chunk;
@@ -194,7 +200,8 @@ function load() {
 				s = lines[i];
 				if (ping = s.match(/^PING\s+\S+/)) {
 					ping = ping[0].replace("PING", "PONG");
-					document.getElementById('IRCSocket').write(ping + '\n');
+					if (window.ajax == false)
+						document.getElementById('IRCSocket').write(ping + '\n');
 
 				} else {
 					s = s.replace(/\&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -224,7 +231,8 @@ function load() {
 									else
 										$(id).append((new Date()).toLocaleTimeString() + " * " + from + " " + irc2html(m) + '<br/>');
 								} else if (m.match(/^\001version\001$/i)) {
-									document.getElementById('IRCSocket').write('NOTICE ' + from + ' :\001VERSION audreyirc v0.1\001\n');
+									if (window.ajax == false)
+										document.getElementById('IRCSocket').write('NOTICE ' + from + ' :\001VERSION audreyirc v0.1\001\n');
 
 								}
 							} else if (!id.match(/^#$/)) {
@@ -385,23 +393,26 @@ function send(event) {
 
 					msg(to);
 
-					document.getElementById('IRCSocket').write('privmsg ' + to + ' :'  + mesg + '\n');
+					if (window.ajax == false)
+						document.getElementById('IRCSocket').write('privmsg ' + to + ' :'  + mesg + '\n');
 
 					$(String.fromCharCode(35).concat(valid(to))).append((new Date()).toLocaleTimeString() + " &lt;<span style=\"color:#F00\">" + nick + "</span>&gt; " + irc2html(mesg) + '<br/>');
 				} else if (l.match(/^\/me\s/i) && target) {
 					var tab = tablist[target];
 
-					document.getElementById('IRCSocket').write('privmsg ' + tab.text + ' :'  + l.replace(/^\/me\s(.*)$/i, "\001ACTION $1\001") + '\n');
+					if (window.ajax == false)
+						document.getElementById('IRCSocket').write('privmsg ' + tab.text + ' :'  + l.replace(/^\/me\s(.*)$/i, "\001ACTION $1\001") + '\n');
 					l = l.replace(/^\/me\s/i,"").replace(/\&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/(https?):\/\/(\S+)/g, "<a href=\"$1://$2\" target=\"_blank\">$1://$2</a>")
 					var panel = panellist[target];
 					$(panel).append((new Date()).toLocaleTimeString() + " * <span style=\"color:#F00\">" + nick + "</span> " + irc2html(l) + '<br/>');
 
-				} else
+				} else if (window.ajax == false)
 					document.getElementById('IRCSocket').write(l.substr(1) + '\n');
 
 			} else if (target) {
 				var tab = tablist[target];
-				document.getElementById('IRCSocket').write('privmsg ' + tab.text + ' :'  + l + '\n');
+				if (window.ajax == false)
+					document.getElementById('IRCSocket').write('privmsg ' + tab.text + ' :'  + l + '\n');
 				l = l.replace(/\&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/(https?):\/\/(\S+)/g, "<a href=\"$1://$2\" target=\"_blank\">$1://$2</a>").replace(/\\u([\d|A-F]{4})/gi, function(arg){return "" + String.fromCharCode(parseInt(arg, 16));});
 				var panel = panellist[target];
 				$(panel).append((new Date()).toLocaleTimeString() + " &lt;<span style=\"color:#F00\">" + nick + "</span>&gt; " + irc2html(l) + '<br/>');
